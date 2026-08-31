@@ -1,0 +1,27 @@
+@use '../variables' as *;
+
+.search-bar {
+    &__input {
+        width: 14.375em;
+
+        padding: 0.75em;
+
+        background: $surface;
+        border: 0.0625em solid $border;
+        border-radius: $radius;
+
+        color: $text;
+
+        font-size: 0.8125rem;
+
+        outline: none;
+
+        &::placeholder {
+            color: #aaa;
+        }
+
+        &:focus {
+            border-color: #999;
+        }
+    }
+}

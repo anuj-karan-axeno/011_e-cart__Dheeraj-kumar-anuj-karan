@@ -1,0 +1,16 @@
+@use '../variables' as *;
+
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 12.5em;
+
+    background: $surface;
+    border: 0.0625em dashed $border;
+
+    color: $text-muted;
+
+    font-size: 0.875rem;
+}

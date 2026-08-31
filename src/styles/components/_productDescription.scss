@@ -1,0 +1,47 @@
+@use '../variables' as *;
+
+.product-description {
+    min-height: 70vh;
+
+    display: flex;
+    align-items: center;
+
+    padding: 5em 2em;
+
+    background: $dark;
+    color: #ffffff;
+
+    &__content {
+        width: 100%;
+        max-width: $container;
+        margin: 0 auto;
+    }
+
+    &__label {
+        margin-bottom: 1.25em;
+
+        color: #aaa;
+
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.125em;
+    }
+
+    &__title {
+        margin-bottom: .5em;
+
+        font-size: clamp(2.875rem, 7vw, 5.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.055em;
+    }
+
+    &__text {
+        max-width: 35em;
+
+        color: #b9b9b4;
+
+        font-size: 1rem;
+        line-height: 1.7;
+    }
+}

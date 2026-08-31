@@ -1,0 +1,68 @@
+@use '../variables' as *;
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1em 2em;
+
+    background: rgba(244, 243, 239, 0.94);
+    border-bottom: 0.0625em solid $border;
+
+    backdrop-filter: blur(0.5em);
+
+    &__logo {
+        color: $text;
+
+        font-size: 1.0625rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+    }
+
+    &__links {
+        display: flex;
+        align-items: center;
+        gap: 1.5em;
+    }
+
+    &__link {
+        color: $text-muted;
+
+        font-size: 0.9rem;
+
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: $text;
+        }
+    }
+
+    &__cart {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+    }
+
+    &__cart-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 2.25em;
+        height: 2.25em;
+        margin-left: .5em;
+
+        padding: 0 0.3125em;
+
+        background: $dark;
+        color: #ffffff;
+
+        border-radius: 50%;
+
+        font-size: .8rem;
+    }
+}

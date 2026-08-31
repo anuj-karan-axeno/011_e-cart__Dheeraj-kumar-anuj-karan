@@ -1,0 +1,55 @@
+@use '../variables' as *;
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 2.5em;
+
+    padding: 0.875em 0.875em;
+
+    border: 0.2em solid transparent;
+    border-radius: $radius;
+
+    font-size: 0.75rem;
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+
+    &--primary {
+        background: $dark;
+        color: #ffffff;
+
+        &:hover:not(:disabled) {
+            background: #333330;
+        }
+    }
+
+    &--danger {
+        background: $danger;
+        color: #ffffff;
+
+        &:hover:not(:disabled) {
+            background: #913b39;
+        }
+    }
+
+    &--outline {
+        background: transparent;
+        border-color: $border;
+
+        color: $text;
+
+        &:hover:not(:disabled) {
+            background: #efeee9;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.45;
+    }
+}

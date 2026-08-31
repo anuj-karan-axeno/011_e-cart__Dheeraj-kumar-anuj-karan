@@ -1,0 +1,23 @@
+@use '../variables' as *;
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 1em 2em;
+
+    border-radius: 50px;
+
+    font-size: 0.625rem;
+    font-weight: 600;
+
+    &--default {
+        background: #eceae4;
+        color: #666158;
+    }
+
+    &--success {
+        background: $success-bg;
+        color: $success-text;
+    }
+}
