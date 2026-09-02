@@ -6,15 +6,15 @@ const Navbar = ({ cartItemCount }) => {
             </a>
 
             <div className="navbar__links">
-                <a href="#product-description" className="navbar__link">
-                    Product Description
+                <a href="#home" className="navbar__link">
+                    Home
                 </a>
 
-                <a href="#product-description" className="navbar__link">
+                <a href="#products" className="navbar__link">
                     All Products
                 </a>
 
-                <a href="#product-description" className="navbar__link">
+                <a href="#cart" className="navbar__link">
                     Cart
                     <span className="navbar__cart-count">
                         {cartItemCount}

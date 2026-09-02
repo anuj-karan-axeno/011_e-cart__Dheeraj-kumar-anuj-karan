@@ -1,43 +1,75 @@
 import ProductCard from "./ProductCard";
 import EmptyState from "./EmptyState";
+import SearchBar from "./SearchBar";
 
 const ProductList = ({
     products,
     onAddToCart,
     cartItems,
     onViewDetails,
+    searchTerm,
+    onSearchChange,
+    sortOrder,
+    onSortChange,
 }) => {
-    if (products.length === 0) {
-        return (
-            <EmptyState message="No products found" />
-        );
-    }
-
     return (
-        <div className="product-list">
-            {products.map((product) => {
-                const isInCart = cartItems.some(
-                    (item) => item.id === product.id
-                );
+        <section className="products-section" id="products">
+            <div className="products-section__header">
+                <div className="products-section__heading">
+                    <p className="products-section__heading-label">
+                        Shop collection
+                    </p>
+                    <h2 className="products-section__title">
+                        All Products
+                    </h2>
+                </div>
 
-                return (
-                    <ProductCard
-                        key={product.id}
-                        name={product.name}
-                        price={product.price}
-                        image={product.image}
-                        category={product.category}
-                        onAddToCart={() =>
-                            onAddToCart(product)
-                        }
-                        isInCart={isInCart}
-                        onViewDetails={() =>
-                            onViewDetails(product)
-                        }
+                <div className="products-section__controls">
+                    <SearchBar
+                        value={searchTerm}
+                        onChange={onSearchChange}
                     />
-                );
-            })}
-        </div>
+
+                    <select
+                        className="products-section__sort"
+                        value={sortOrder}
+                        onChange={onSortChange}
+                    >
+                        <option value="low">Price: Low to High</option>
+                        <option value="high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            {products.length === 0 ? (
+                <EmptyState message="No products found" />
+            ) : (
+                <div className="product-list">
+                    {products.map((product) => {
+                        const isInCart = cartItems.some(
+                            (item) => item.id === product.id
+                        );
+
+                        return (
+                            <ProductCard
+                                key={product.id}
+                                name={product.name}
+                                price={product.price}
+                                image={product.image}
+                                category={product.category}
+                                onAddToCart={() =>
+                                    onAddToCart(product)
+                                }
+                                isInCart={isInCart}
+                                onViewDetails={() =>
+                                    onViewDetails(product)
+                                }
+                            />
+                        );
+                    })}
+                </div>
+            )}
+        </section>
     );
 };
 

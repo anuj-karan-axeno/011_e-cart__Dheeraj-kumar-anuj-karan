@@ -1,13 +1,13 @@
 import Badge from "./Badge";
 import Button from "./Button";
 
-const ProductDetails = ({ product, onAddToCart }) => {
+const ProductDetails = ({ product, onAddToCart, detailRef }) => {
     if (!product) {
         return null;
     }
 
     return (
-        <section className="product-details" id="product-details">
+        <section ref={detailRef} className="product-details" id="product-details">
            
             <div className="product-details__content">
                 <div className="product-details__image">

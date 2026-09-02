@@ -1,6 +1,6 @@
 @use '../variables' as *;
 
-.product-description {
+.home {
     min-height: 70vh;
 
     display: flex;
@@ -43,5 +43,19 @@
 
         font-size: 1rem;
         line-height: 1.7;
+    }
+
+    @media (max-width: 48em) {
+        padding: 4em 1.25em;
+
+        &__title {
+            font-size: 3.25rem;
+        }
+    }
+
+    @media (max-width: 32.5em) {
+        &__title {
+            font-size: 2.75rem;
+        }
     }
 }

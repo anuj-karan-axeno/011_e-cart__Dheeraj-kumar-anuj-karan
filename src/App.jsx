@@ -1,17 +1,23 @@
 import { useState } from "react";
 
 import Navbar from "./components/Navbar";
-import ProductDescription from "./components/ProductDescription";
+import Home from "./components/Home";
 import ProductDetails from "./components/ProductDetails";
-import SearchBar from "./components/SearchBar";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
 
 import { products } from "./data/products";
 
-const MAX_QTY = 10;
+import "./styles/main.scss";
 
-const App = () => {
+
+const MAX_QTY = 10;
+const DISCOUNT_CODE = "SAVE10";
+const DISCOUNT_RATE = 0.10;
+
+
+function App() {
+
   const [cartItems, setCartItems] = useState(() => {
     try {
       const saved = localStorage.getItem("cart");
@@ -23,22 +29,30 @@ const App = () => {
   });
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("");
+
+  const [sortOrder, setSortOrder] = useState("low");
+
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const updateCart = (newCart) => {
+  const [couponCode, setCouponCode] = useState("");
+
+  const [discountApplied, setDiscountApplied] = useState(false);
+
+  const [couponMessage, setCouponMessage] = useState("");
+
+
+  function updateCart(newCart) {
     setCartItems(newCart);
 
-    localStorage.setItem(
-      "cart",
-      JSON.stringify(newCart)
-    );
-  };
+    localStorage.setItem("cart", JSON.stringify(newCart));
+  }
 
-  const handleAddToCart = (product) => {
-    const existingItem = cartItems.find(
-      (item) => item.id === product.id
-    );
+
+  function handleAddToCart(product) {
+
+    const existingItem = cartItems.find((item) => item.id === product.id);
+
+    let newCart;
 
     if (existingItem) {
 
@@ -46,7 +60,7 @@ const App = () => {
         return;
       }
 
-      const newCart = cartItems.map((item) =>
+      newCart = cartItems.map((item) =>
         item.id === product.id
           ? {
             ...item,
@@ -55,26 +69,25 @@ const App = () => {
           : item
       );
 
-      updateCart(newCart);
+    } else {
 
-
-      return;
+      newCart = [
+        ...cartItems,
+        {
+          ...product,
+          quantity: 1,
+        },
+      ];
     }
 
-    updateCart([
-      ...cartItems,
-      {
-        ...product,
-        quantity: 1,
-      },
-    ]);
+    updateCart(newCart);
+  }
 
 
-    alert("Product added into cart successfully :)")
-  };
+  function handleIncrease(id) {
 
-  const handleIncrease = (id) => {
     const newCart = cartItems.map((item) => {
+
       if (item.id !== id) {
         return item;
       }
@@ -90,45 +103,137 @@ const App = () => {
     });
 
     updateCart(newCart);
-  };
+  }
 
-  const handleDecrease = (id) => {
-    const item = cartItems.find(
-      (item) => item.id === id
-    );
 
-    if (!item) {
-      return;
-    }
+  function handleDecrease(id) {
 
-    if (item.quantity === 1) {
-      handleRemove(id);
-      return;
-    }
+    const newCart = cartItems.map((item) => {
 
-    const newCart = cartItems.map((item) =>
-      item.id === id
-        ? {
-          ...item,
-          quantity: item.quantity - 1,
-        }
-        : item
-    );
+      if (item.id !== id) {
+        return item;
+      }
+
+      if (item.quantity === 1) {
+        return null;
+      }
+
+      return {
+        ...item,
+        quantity: item.quantity - 1,
+      };
+    })
+      .filter(Boolean);
 
     updateCart(newCart);
-  };
+  }
 
-  const handleRemove = (id) => {
+
+  function handleRemove(id) {
+
     const newCart = cartItems.filter(
       (item) => item.id !== id
     );
 
     updateCart(newCart);
-  };
+  }
 
-  const handleSearchChange = (event) => {
+
+  function clearCart() {
+
+    updateCart([]);
+
+    setCouponCode("");
+    setDiscountApplied(false);
+    setCouponMessage("");
+  }
+
+
+  function handleSearchChange(event) {
     setSearchTerm(event.target.value);
-  };
+  }
+
+
+  function handleSortChange(event) {
+    setSortOrder(event.target.value);
+  }
+
+
+  function handleViewDetails(product) {
+    setSelectedProduct(product);
+
+    window.scrollTo({
+      top: document.getElementById("product-details")?.offsetTop || 0,
+      behavior: "smooth",
+    });
+  }
+
+  function handleCouponChange(event) {
+
+    const uppercaseValue = event.target.value.toUpperCase();
+
+    setCouponCode(uppercaseValue);
+
+    setCouponMessage("");
+
+    if (discountApplied) {
+      setDiscountApplied(false);
+    }
+  }
+
+
+  function handleApplyCoupon(event) {
+
+    event.preventDefault();
+
+    const normalizedCode = couponCode
+      .trim()
+      .toUpperCase();
+
+
+    if (normalizedCode === DISCOUNT_CODE) {
+
+      setDiscountApplied(true);
+
+      setCouponCode(DISCOUNT_CODE);
+
+      setCouponMessage(
+        "10% discount applied successfully."
+      );
+
+      return;
+    }
+
+
+    setDiscountApplied(false);
+
+    setCouponMessage(
+      "Invalid coupon code."
+    );
+  }
+
+
+  function handleRemoveCoupon() {
+
+    setCouponCode("");
+
+    setDiscountApplied(false);
+
+    setCouponMessage("");
+  }
+
+
+  function handleCheckout() {
+    const confirmed = confirm("Proceed to checkout?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    alert("Checkout successful! Your cart is now empty.");
+    clearCart();
+  }
+
 
   const filteredProducts = products.filter((product) =>
     product.name
@@ -136,37 +241,39 @@ const App = () => {
       .includes(searchTerm.toLowerCase())
   );
 
-  const sortedProducts = [...filteredProducts];
 
-  if (sortOrder === "low-to-high") {
-    sortedProducts.sort(
-      (a, b) => a.price - b.price
-    );
-  }
+  const sortedProducts = [...filteredProducts].sort(
+    (firstProduct, secondProduct) => {
 
-  if (sortOrder === "high-to-low") {
-    sortedProducts.sort(
-      (a, b) => b.price - a.price
-    );
-  }
+      if (sortOrder === "high") {
+        return secondProduct.price - firstProduct.price;
+      }
 
-  const cartItemCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
+      return firstProduct.price - secondProduct.price;
+    }
+  );
+
+
+  const cartItemCount = cartItems.reduce((total, item) => {
+
+    return total + item.quantity
+  }, 0
+  );
+
+
+  const cartTotal = cartItems.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
     0
   );
 
-  const handleViewDetails = (product) => {
-    setSelectedProduct(product);
+
+  const discountAmount = discountApplied
+    ? cartTotal * DISCOUNT_RATE
+    : 0;
 
 
-    document
-      .getElementById("product-details")
-      ?.scrollIntoView({
-        behavior: "smooth",
-
-      });
-
-  };
+  const finalTotal = cartTotal - discountAmount;
 
 
   return (
@@ -176,74 +283,48 @@ const App = () => {
       />
 
       <main>
-        <ProductDescription />
 
-        {selectedProduct && (
-          <ProductDetails
-            product={selectedProduct}
-            onAddToCart={handleAddToCart}
-          />
-        )}
+        <Home />
 
-        <section
-          id="products"
-          className="products-section"
-        >
-          <div className="products-section__header">
-            <div>
-              <p>Our Collection</p>
+        <ProductDetails
+          product={selectedProduct}
+          onAddToCart={handleAddToCart}
+        />
 
-              <h2>All Products</h2>
-            </div>
-
-            <div className="products-section__controls">
-              <SearchBar
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-
-              <select
-                className="products-section__sort"
-                value={sortOrder}
-                onChange={(event) =>
-                  setSortOrder(
-                    event.target.value
-                  )
-                }
-              >
-                <option value="">
-                  Sort by Price
-                </option>
-
-                <option value="low-to-high">
-                  Price: Low to High
-                </option>
-
-                <option value="high-to-low">
-                  Price: High to Low
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <ProductList
-            products={sortedProducts}
-            onAddToCart={handleAddToCart}
-            cartItems={cartItems}
-            onViewDetails={handleViewDetails}
-          />
-        </section>
+        <ProductList
+          products={sortedProducts}
+          onAddToCart={handleAddToCart}
+          searchTerm={searchTerm}
+          onSearchChange={handleSearchChange}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
+          onViewDetails={handleViewDetails}
+          cartItems={cartItems}
+        />
 
         <Cart
           cartItems={cartItems}
           onIncrease={handleIncrease}
           onDecrease={handleDecrease}
           onRemove={handleRemove}
-          onClear={() => updateCart([])}
+          onClearCart={clearCart}
+          onCheckout={handleCheckout}
+          totalPrice={cartTotal}
+          totalItemCount={cartItemCount}
+          couponCode={couponCode}
+          onCouponChange={handleCouponChange}
+          onApplyCoupon={handleApplyCoupon}
+          onRemoveCoupon={handleRemoveCoupon}
+          couponMessage={couponMessage}
+          discountApplied={discountApplied}
+          discountAmount={discountAmount}
+          finalTotal={finalTotal}
         />
+
       </main>
     </>
   );
-};
+}
+
 
 export default App;

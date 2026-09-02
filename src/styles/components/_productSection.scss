@@ -57,6 +57,35 @@
             border-color: #999;
         }
     }
+
+    @media (max-width: 48em) {
+        &__header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        &__controls {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 32.5em) {
+        width: calc(100% - 2em);
+        padding: 3.75em 0;
+
+        &__title {
+            font-size: 2.125rem;
+        }
+
+        &__controls {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        &__sort {
+            width: 100%;
+        }
+    }
 }
 
 .product-list {
@@ -67,4 +96,16 @@
 
     background: $border;
     border: 0.0625em solid $border;
+
+    @media (max-width: 64em) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 48em) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 32.5em) {
+        grid-template-columns: 1fr;
+    }
 }
