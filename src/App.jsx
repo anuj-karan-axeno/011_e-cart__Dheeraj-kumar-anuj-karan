@@ -79,6 +79,7 @@ function App() {
         },
       ];
     }
+    alert("Product added into cart :)")
 
     updateCart(newCart);
   }
